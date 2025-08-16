@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate YouTube Downloader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Navigation -->
+    <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-download text-2xl text-blue-600 dark:text-blue-400"></i>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Ultimate YouTube Downloader</h1>
+                </div>
+                <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fas fa-moon text-gray-600 dark:text-gray-300" id="themeIcon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                Download YouTube Videos with Ease
+            </h2>
+            <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                Professional-grade YouTube video downloader with support for all qualities and formats.
+            </p>
+        </div>
+
+        <!-- Main Download Interface -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column - Download Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+                        <i class="fas fa-link mr-2 text-blue-600"></i>Video URL
+                    </h3>
+                    
+                    <!-- URL Input -->
+                    <div class="mb-6">
+                        <input 
+                            type="url" 
+                            id="videoUrl" 
+                            placeholder="https://www.youtube.com/watch?v=..." 
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        >
+                    </div>
+
+                    <!-- Video Preview -->
+                    <div id="videoPreview" class="hidden mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div class="flex items-start space-x-4">
+                            <img id="videoThumbnail" src="" alt="Video thumbnail" class="w-32 h-20 object-cover rounded-lg">
+                            <div class="flex-1">
+                                <h4 id="videoTitle" class="font-semibold text-gray-900 dark:text-white mb-2"></h4>
+                                <p id="videoUploader" class="text-sm text-gray-600 dark:text-gray-300 mb-1"></p>
+                                <p id="videoDuration" class="text-sm text-gray-500 dark:text-gray-400"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Download Options -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <i class="fas fa-video mr-1"></i> Quality
+                            </label>
+                            <select id="qualitySelect" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="best">Best Quality</option>
+                                <option value="2160p">4K (2160p)</option>
+                                <option value="1440p">2K (1440p)</option>
+                                <option value="1080p" selected>Full HD (1080p)</option>
+                                <option value="720p">HD (720p)</option>
+                                <option value="480p">SD (480p)</option>
+                                <option value="360p">Low (360p)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <i class="fas fa-file mr-1"></i> Format
+                            </label>
+                            <select id="formatSelect" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="mp4" selected>MP4 Video</option>
+                                <option value="mp3">MP3 Audio</option>
+                                <option value="webm">WebM Video</option>
+                                <option value="m4a">M4A Audio</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <i class="fas fa-music mr-1"></i> Audio Quality
+                            </label>
+                            <select id="audioQualitySelect" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="128">128 kbps</option>
+                                <option value="160">160 kbps</option>
+                                <option value="192" selected>192 kbps</option>
+                                <option value="256">256 kbps</option>
+                                <option value="320">320 kbps</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Download Button -->
+                    <button id="downloadBtn" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                        <i class="fas fa-download mr-2"></i>
+                        <span id="downloadBtnText">Get Video Info</span>
+                    </button>
+
+                    <!-- Progress Bar -->
+                    <div id="progressContainer" class="hidden mt-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Download Progress</span>
+                            <span id="progressPercent" class="text-sm text-gray-500 dark:text-gray-400">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div id="progressBar" class="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <div class="flex items-center justify-between mt-2">
+                            <span id="downloadStatus" class="text-sm text-gray-600 dark:text-gray-400">Preparing download...</span>
+                            <button id="cancelBtn" class="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                                <i class="fas fa-times mr-1"></i>Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Downloads & System Info -->
+            <div class="space-y-6">
+                <!-- Active Downloads -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-list mr-2 text-green-600"></i>Active Downloads
+                    </h3>
+                    <div id="activeDownloads" class="space-y-3">
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">No active downloads</p>
+                    </div>
+                </div>
+
+                <!-- System Information -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-server mr-2 text-blue-600"></i>System Status
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600 dark:text-gray-300">Memory Usage</span>
+                            <span id="memoryUsage" class="text-sm font-medium text-gray-900 dark:text-white">--</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600 dark:text-gray-300">Active Downloads</span>
+                            <span id="activeDownloadCount" class="text-sm font-medium text-gray-900 dark:text-white">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600 dark:text-gray-300">Queue Size</span>
+                            <span id="queueSize" class="text-sm font-medium text-gray-900 dark:text-white">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <script>
+        class YouTubeDownloader {
+            constructor() {
+                this.currentDownloadId = null;
+                this.statusInterval = null;
+                this.isDarkMode = localStorage.getItem('darkMode') === 'true';
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.setupTheme();
+                this.startSystemMonitoring();
+            }
+
+            initializeElements() {
+                this.urlInput = document.getElementById('videoUrl');
+                this.downloadBtn = document.getElementById('downloadBtn');
+                this.downloadBtnText = document.getElementById('downloadBtnText');
+                this.progressContainer = document.getElementById('progressContainer');
+                this.progressBar = document.getElementById('progressBar');
+                this.progressPercent = document.getElementById('progressPercent');
+                this.downloadStatus = document.getElementById('downloadStatus');
+                this.cancelBtn = document.getElementById('cancelBtn');
+                this.videoPreview = document.getElementById('videoPreview');
+                this.videoThumbnail = document.getElementById('videoThumbnail');
+                this.videoTitle = document.getElementById('videoTitle');
+                this.videoUploader = document.getElementById('videoUploader');
+                this.videoDuration = document.getElementById('videoDuration');
+                this.qualitySelect = document.getElementById('qualitySelect');
+                this.formatSelect = document.getElementById('formatSelect');
+                this.audioQualitySelect = document.getElementById('audioQualitySelect');
+                this.memoryUsage = document.getElementById('memoryUsage');
+                this.activeDownloadCount = document.getElementById('activeDownloadCount');
+                this.queueSize = document.getElementById('queueSize');
+                this.activeDownloads = document.getElementById('activeDownloads');
+                this.themeToggle = document.getElementById('themeToggle');
+                this.themeIcon = document.getElementById('themeIcon');
+            }
+
+            bindEvents() {
+                this.urlInput.addEventListener('input', () => this.handleUrlInput());
+                this.downloadBtn.addEventListener('click', () => this.handleDownload());
+                this.cancelBtn.addEventListener('click', () => this.cancelDownload());
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+                this.formatSelect.addEventListener('change', () => this.handleFormatChange());
+            }
+
+            setupTheme() {
+                if (this.isDarkMode) {
+                    document.documentElement.classList.add('dark');
+                    this.themeIcon.className = 'fas fa-sun text-gray-300';
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    this.themeIcon.className = 'fas fa-moon text-gray-600';
+                }
+            }
+
+            toggleTheme() {
+                this.isDarkMode = !this.isDarkMode;
+                localStorage.setItem('darkMode', this.isDarkMode);
+                this.setupTheme();
+            }
+
+            async handleUrlInput() {
+                const url = this.urlInput.value.trim();
+                
+                if (url && this.isValidYouTubeUrl(url)) {
+                    this.downloadBtnText.textContent = 'Get Video Info';
+                    this.downloadBtn.disabled = false;
+                    
+                    clearTimeout(this.urlTimeout);
+                    this.urlTimeout = setTimeout(() => this.getVideoInfo(), 1000);
+                } else {
+                    this.downloadBtnText.textContent = 'Enter YouTube URL';
+                    this.downloadBtn.disabled = true;
+                    this.videoPreview.classList.add('hidden');
+                }
+            }
+
+            isValidYouTubeUrl(url) {
+                return url.includes('youtube.com') || url.includes('youtu.be');
+            }
+
+            async getVideoInfo() {
+                const url = this.urlInput.value.trim();
+                if (!url) return;
+
+                try {
+                    const response = await fetch('/api/video-info', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.displayVideoInfo(data.data);
+                        this.downloadBtnText.textContent = 'Start Download';
+                    } else {
+                        this.showToast(data.error || 'Failed to get video info', 'error');
+                    }
+                } catch (error) {
+                    this.showToast('Network error. Please try again.', 'error');
+                }
+            }
+
+            displayVideoInfo(videoInfo) {
+                this.videoThumbnail.src = videoInfo.thumbnail || '';
+                this.videoTitle.textContent = videoInfo.title || 'Unknown Title';
+                this.videoUploader.textContent = videoInfo.uploader || 'Unknown Uploader';
+                this.videoDuration.textContent = this.formatDuration(videoInfo.duration);
+                
+                this.videoPreview.classList.remove('hidden');
+            }
+
+            formatDuration(seconds) {
+                if (!seconds) return 'Unknown';
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+                
+                if (hours > 0) {
+                    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                }
+                return `${minutes}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            handleFormatChange() {
+                const format = this.formatSelect.value;
+                const audioQualityContainer = this.audioQualitySelect.parentElement;
+                
+                if (format === 'mp3' || format === 'm4a') {
+                    audioQualityContainer.style.display = 'block';
+                } else {
+                    audioQualityContainer.style.display = 'none';
+                }
+            }
+
+            async handleDownload() {
+                const url = this.urlInput.value.trim();
+                if (!url) return;
+
+                try {
+                    const downloadData = {
+                        url,
+                        quality: this.qualitySelect.value,
+                        format_type: this.formatSelect.value
+                    };
+
+                    const response = await fetch('/api/download', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(downloadData)
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.currentDownloadId = data.download_id;
+                        this.startProgressTracking();
+                        this.showToast('Download started successfully!', 'success');
+                    } else {
+                        this.showToast(data.error || 'Failed to start download', 'error');
+                    }
+                } catch (error) {
+                    this.showToast('Network error. Please try again.', 'error');
+                }
+            }
+
+            startProgressTracking() {
+                this.progressContainer.classList.remove('hidden');
+                this.downloadBtn.disabled = true;
+                
+                if (this.statusInterval) {
+                    clearInterval(this.statusInterval);
+                }
+                
+                this.statusInterval = setInterval(() => this.updateProgress(), 1000);
+            }
+
+            async updateProgress() {
+                if (!this.currentDownloadId) return;
+
+                try {
+                    const response = await fetch(`/api/download/${this.currentDownloadId}/status`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const status = data.data;
+                        this.updateProgressUI(status);
+                        
+                        if (status.status === 'completed') {
+                            this.handleDownloadComplete(status);
+                        } else if (status.status === 'error') {
+                            this.handleDownloadError(status);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error updating progress:', error);
+                }
+            }
+
+            updateProgressUI(status) {
+                this.progressBar.style.width = `${status.progress}%`;
+                this.progressPercent.textContent = `${Math.round(status.progress)}%`;
+                
+                let statusText = 'Preparing...';
+                if (status.status === 'queued') statusText = 'Queued...';
+                else if (status.status === 'downloading') statusText = 'Downloading...';
+                else if (status.status === 'completed') statusText = 'Completed!';
+                else if (status.status === 'error') statusText = 'Error occurred';
+                
+                this.downloadStatus.textContent = statusText;
+            }
+
+            handleDownloadComplete(status) {
+                clearInterval(this.statusInterval);
+                this.showToast('Download completed!', 'success');
+                
+                this.downloadFile(status.id);
+                
+                setTimeout(() => {
+                    this.progressContainer.classList.add('hidden');
+                    this.downloadBtn.disabled = false;
+                    this.currentDownloadId = null;
+                }, 2000);
+                
+                this.updateActiveDownloads();
+            }
+
+            handleDownloadError(status) {
+                clearInterval(this.statusInterval);
+                this.showToast(`Download failed: ${status.error}`, 'error');
+                
+                this.progressContainer.classList.add('hidden');
+                this.downloadBtn.disabled = false;
+                this.currentDownloadId = null;
+            }
+
+            async downloadFile(downloadId) {
+                try {
+                    const response = await fetch(`/api/download/${downloadId}/file`);
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = response.headers.get('content-disposition')?.split('filename=')[1]?.replace(/"/g, '') || 'download';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }
+                } catch (error) {
+                    console.error('Error downloading file:', error);
+                }
+            }
+
+            async cancelDownload() {
+                if (!this.currentDownloadId) return;
+
+                try {
+                    const response = await fetch(`/api/download/${this.currentDownloadId}/cancel`, {
+                        method: 'POST'
+                    });
+                    
+                    if (response.ok) {
+                        this.showToast('Download cancelled', 'info');
+                        clearInterval(this.statusInterval);
+                        this.progressContainer.classList.add('hidden');
+                        this.downloadBtn.disabled = false;
+                        this.currentDownloadId = null;
+                    }
+                } catch (error) {
+                    this.showToast('Failed to cancel download', 'error');
+                }
+            }
+
+            async updateActiveDownloads() {
+                try {
+                    const response = await fetch('/api/downloads');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.displayActiveDownloads(data.data);
+                    }
+                } catch (error) {
+                    console.error('Error updating active downloads:', error);
+                }
+            }
+
+            displayActiveDownloads(downloads) {
+                if (downloads.length === 0) {
+                    this.activeDownloads.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-sm">No active downloads</p>';
+                    return;
+                }
+
+                this.activeDownloads.innerHTML = downloads.map(download => `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white truncate">${download.url}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">${download.status} - ${Math.round(download.progress)}%</p>
+                        </div>
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            download.status === 'completed' ? 'bg-green-100 text-green-800' :
+                            download.status === 'error' ? 'bg-red-100 text-red-800' :
+                            'bg-blue-100 text-blue-800'
+                        }">
+                            ${download.status}
+                        </span>
+                    </div>
+                `).join('');
+            }
+
+            async startSystemMonitoring() {
+                this.updateSystemInfo();
+                setInterval(() => this.updateSystemInfo(), 5000);
+                setInterval(() => this.updateActiveDownloads(), 2000);
+            }
+
+            async updateSystemInfo() {
+                try {
+                    const response = await fetch('/api/system/info');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const info = data.data;
+                        this.memoryUsage.textContent = `${info.memory_usage.toFixed(1)}%`;
+                        this.activeDownloadCount.textContent = info.active_downloads;
+                        this.queueSize.textContent = info.queue_size;
+                    }
+                } catch (error) {
+                    console.error('Error updating system info:', error);
+                }
+            }
+
+            showToast(message, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                
+                const colors = {
+                    success: 'bg-green-500',
+                    error: 'bg-red-500',
+                    warning: 'bg-yellow-500',
+                    info: 'bg-blue-500'
+                };
+                
+                toast.className = `${colors[type]} text-white px-4 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
+                toast.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation-triangle' : 'info'}-circle"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                container.appendChild(toast);
+                
+                setTimeout(() => toast.classList.remove('translate-x-full'), 100);
+                
+                setTimeout(() => {
+                    toast.classList.add('translate-x-full');
+                    setTimeout(() => container.removeChild(toast), 300);
+                }, 5000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new YouTubeDownloader();
+        });
+    </script>
+</body>
+</html>
